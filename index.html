@@ -49,21 +49,21 @@
         }
 
         // Fonction pour générer les cartes HTML avec le format "carte_3_i"
-        function generateCardsHTML(totalCards) {
-            let cardsHTML = '';
-            for (let i = 1; i <= totalCards; i += 2) {
-                const rectoIndex = i;        // Numéro impair pour le recto
-                const versoIndex = i + 1;    // Numéro pair pour le verso
-                cardsHTML += `
-                    <div class="card">
-                        <img src="images/carte_3_${rectoIndex}.jpg" alt="Carte ${rectoIndex} Recto" class="front">
-                        <img src="images/carte_3_${versoIndex}.jpg" alt="Carte ${versoIndex} Verso" class="back" style="display:none;">
-                        <button onclick="flipCard(this)">Switch Recto/Verso</button>
-                    </div>
-                `;
-            }
-            return cardsHTML;
-        }
+      function generateCardsHTML(totalCards) {
+    let cardsHTML = '';
+    for (let i = 1; i <= totalCards; i += 2) {
+        const rectoIndex = i;        // Numéro impair pour le recto
+        const versoIndex = i + 1;    // Numéro pair pour le verso
+        cardsHTML += `
+            <div class="card">
+                <img src="images/carte_3_${rectoIndex}" alt="Carte ${rectoIndex} Recto" class="front">
+                <img src="images/carte_3_${versoIndex}" alt="Carte ${versoIndex} Verso" class="back" style="display:none;">
+                <button onclick="flipCard(this)">Switch Recto/Verso</button>
+            </div>
+        `;
+    }
+    return cardsHTML;
+    }
 
         // Injecte le contenu généré dans la page
         document.addEventListener('DOMContentLoaded', () => {
