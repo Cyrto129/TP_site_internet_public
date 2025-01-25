@@ -6,25 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="assets/css/main.css" />
     <style>
-        /* Ensure the card gallery is above the background */
-        .card-gallery {
+        /* Isolate custom styles within #custom-game */
+        #custom-game .card-gallery {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin: 20px;
-            z-index: 10; /* Ensure the cards are above the background */
+            z-index: 100; /* Ensure cards are above other elements */
             position: relative; /* Required for z-index to work */
         }
 
-        /* Style for individual cards */
-        .card {
+        #custom-game .card {
             position: relative;
             text-align: center;
             border: 2px solid red; /* Debugging: Highlight the card container */
         }
 
-        /* Style for images inside cards */
-        .card img {
+        #custom-game .card img {
             width: 100%;
             max-width: 300px;
             height: 200px; /* Set a fixed height for consistency */
@@ -32,18 +30,15 @@
             border: 2px solid blue; /* Debugging: Highlight the images */
         }
 
-        /* Ensure the front images are visible by default */
-        .front {
-            display: block; /* Front images are visible */
+        #custom-game .front {
+            display: block !important; /* Ensure front images are visible */
         }
 
-        /* Ensure the back images are hidden by default */
-        .back {
-            display: none; /* Back images are hidden */
+        #custom-game .back {
+            display: none !important; /* Ensure back images are hidden */
         }
 
-        /* Style for the flip button */
-        .card button {
+        #custom-game .card button {
             margin-top: 10px;
             padding: 10px 20px;
             background-color: #007BFF;
@@ -53,15 +48,8 @@
             cursor: pointer;
         }
 
-        /* Hover effect for the button */
-        .card button:hover {
+        #custom-game .card button:hover {
             background-color: #0056b3;
-        }
-
-        /* Ensure the background is below the cards */
-        #bg {
-            z-index: 1; /* Ensure the background is below the cards */
-            opacity: 0.5; /* Debugging: Make the background semi-transparent */
         }
     </style>
     <script>
@@ -85,8 +73,8 @@
             for (let i = 1; i <= totalCards; i += 2) {
                 const rectoIndex = i;        // Odd number for recto
                 const versoIndex = i + 1;    // Even number for verso
-                const rectoPath = `images/carte_3_${rectoIndex}.jpg`;
-                const versoPath = `images/carte_3_${versoIndex}.jpg`;
+                const rectoPath = `images/carte_3_${rectoIndex}.JPG`;
+                const versoPath = `images/carte_3_${versoIndex}.JPG`;
                 console.log(`Recto: ${rectoPath}, Verso: ${versoPath}`); // Debugging: Log paths
                 cardsHTML += `
                     <div class="card">
@@ -101,7 +89,7 @@
 
         // Inject the generated content into the page after the DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
-            const cardGallery = document.querySelector('.card-gallery');
+            const cardGallery = document.querySelector('#custom-game .card-gallery');
             cardGallery.innerHTML = generateCardsHTML(22);
         });
     </script>
@@ -128,8 +116,11 @@
     <div id="main">
         <article id="game">
             <h2 class="major">Cartes de Gestion de Projet</h2>
-            <div class="card-gallery">
-                <!-- Cards will be generated here -->
+            <!-- Isolate custom code within #custom-game -->
+            <div id="custom-game">
+                <div class="card-gallery">
+                    <!-- Cards will be generated here -->
+                </div>
             </div>
         </article>
     </div>
