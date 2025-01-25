@@ -32,6 +32,16 @@
             border: 2px solid blue; /* Debugging: Highlight the images */
         }
 
+        /* Ensure the front images are visible by default */
+        .front {
+            display: block; /* Front images are visible */
+        }
+
+        /* Ensure the back images are hidden by default */
+        .back {
+            display: none; /* Back images are hidden */
+        }
+
         /* Style for the flip button */
         .card button {
             margin-top: 10px;
@@ -75,13 +85,13 @@
             for (let i = 1; i <= totalCards; i += 2) {
                 const rectoIndex = i;        // Odd number for recto
                 const versoIndex = i + 1;    // Even number for verso
-                const rectoPath = `images/carte_3_${rectoIndex}.JPG`;
-                const versoPath = `images/carte_3_${versoIndex}.JPG`;
+                const rectoPath = `images/carte_3_${rectoIndex}.jpg`;
+                const versoPath = `images/carte_3_${versoIndex}.jpg`;
                 console.log(`Recto: ${rectoPath}, Verso: ${versoPath}`); // Debugging: Log paths
                 cardsHTML += `
                     <div class="card">
                         <img src="${rectoPath}" alt="Carte ${rectoIndex} Recto" class="front">
-                        <img src="${versoPath}" alt="Carte ${versoIndex} Verso" class="back" style="display:none;">
+                        <img src="${versoPath}" alt="Carte ${versoIndex} Verso" class="back">
                         <button onclick="flipCard(this)">Switch Recto/Verso</button>
                     </div>
                 `;
