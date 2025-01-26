@@ -73,6 +73,15 @@
             color: #333;
             font-size: 16px;
         }
+          select {
+            padding: 12px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            font-size: 16px;
+              width: 100%;
+          }
 
         /* Card container */
         .card-container {
@@ -134,9 +143,14 @@
     <div class="container" id="gameMode">
         <div class="sidebar">
             <div class="search-container">
-                <p class="instruction-text">Tapez le numéro de la carte à révéler</p>
-                <input type="number" id="cardInput" placeholder="Numéro (1-11)" min="1" max="11" value="1">
-                <button id="okButton">OK</button>
+              <p class="instruction-text">Tapez le numéro de la carte à révéler</p>
+              <input type="number" id="cardInput" placeholder="Numéro (1-11)" min="1" max="11" value="1">
+              <p class="instruction-text">Sélectionnez la planète</p>
+              <select id="planetSelector">
+                <option value="1">Planète 1</option>
+                <option value="2">Planète 2</option>
+              </select>
+              <button id="okButton">OK</button>
             </div>
         </div>
 
@@ -157,13 +171,14 @@
 </div>
 
 <script>
-    // [Keep the same JavaScript code from previous version]
+     // Global variables
     // Global variables
     let currentMode = 'game';
     let currentCard = 1;
     let isFrontVisible = true;
+    let currentPlanet = 1; // Initialize current planet to 1
 
-    // Mode switching function
+   // Mode switching function
     function switchMode() {
         const gameMode = document.getElementById('gameMode');
         const presentationMode = document.getElementById('presentationMode');
@@ -190,19 +205,41 @@
         };
     }
 
+   function getImageSrc(planet, card) {
+    const srcJPG = [`images/carte_${planet}_${card}.jpg`, `images/Carte_${planet}_${card}.jpg`];
+    const srcJPEG = [`images/carte_${planet}_${card}.jpeg`, `images/Carte_${planet}_${card}.jpeg`];
+
+    for (const src of [...srcJPG,...srcJPEG])
+    {
+        let img = new Image();
+        img.src = src;
+        if (img.complete && img.naturalWidth !== 0) {
+          return src;
+        }
+    }
+
+    return ''; // Return empty if no image found
+}
+
     // Show card function
     function showCard() {
         const inputNumber = parseInt(document.getElementById('cardInput').value);
-        
+       
+       
         if (inputNumber < 1 || inputNumber > 11) {
             alert('Veuillez entrer un numéro entre 1 et 11');
             return;
         }
 
+      
+        const planetSelector = document.getElementById('planetSelector');
+        currentPlanet = parseInt(planetSelector.value);
+
+
         const {recto, verso} = calculateCardNumbers(inputNumber);
         
-        document.getElementById('rectoImage').src = `images/carte_3_${recto}.jpg`;
-        document.getElementById('versoImage').src = `images/carte_3_${verso}.jpg`;
+        document.getElementById('rectoImage').src = getImageSrc(currentPlanet,recto);
+        document.getElementById('versoImage').src = getImageSrc(currentPlanet,verso);
         
         isFrontVisible = true;
         document.getElementById('rectoImage').style.opacity = 1;
@@ -227,6 +264,14 @@
         document.getElementById('modeSwitcher').addEventListener('click', switchMode);
         document.getElementById('okButton').addEventListener('click', showCard);
         document.getElementById('flipButton').addEventListener('click', flipCard);
+
+        // Handle planet selector change
+        const planetSelector = document.getElementById('planetSelector');
+        planetSelector.addEventListener('change', showCard);
+
+         // Handle card input changes
+        const cardInput = document.getElementById('cardInput');
+        cardInput.addEventListener('change', showCard);
     });
 </script>
 
