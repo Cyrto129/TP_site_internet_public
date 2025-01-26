@@ -144,12 +144,17 @@
         <div class="sidebar">
             <div class="search-container">
               <p class="instruction-text">Tapez le numéro de la carte à révéler</p>
-              <input type="number" id="cardInput" placeholder="Numéro (1-11)" min="1" max="11" value="1">
+              <input type="number" id="cardInput" placeholder="Numéro (1-...) " min="1" value="1">
               <p class="instruction-text">Sélectionnez la planète</p>
               <select id="planetSelector">
                 <option value="1">Planète 1</option>
                 <option value="2">Planète 2</option>
-              </select>
+                <option value="3">Planète 3</option>
+                <option value="4">Planète 4</option>
+                <option value="5">Planète 5</option>
+                <option value="6">Planète 6</option>
+                <option value="F">Planète Finale</option>
+                </select>
               <button id="okButton">OK</button>
             </div>
         </div>
@@ -172,7 +177,11 @@
 
 <script>
      // Global variables
+
     // Global variables
+        // Global variables
+        // Global variables
+        // Global variables
     let currentMode = 'game';
     let currentCard = 1;
     let isFrontVisible = true;
@@ -200,46 +209,69 @@
     // Card number calculation
     function calculateCardNumbers(inputNumber) {
         return {
-            recto: inputNumber * 2,
-            verso: (inputNumber * 2) + 1
+            recto: (inputNumber * 2) - 1,
+            verso: inputNumber * 2
         };
     }
 
-   function getImageSrc(planet, card) {
-    const srcJPG = [`images/carte_${planet}_${card}.jpg`, `images/Carte_${planet}_${card}.jpg`];
-    const srcJPEG = [`images/carte_${planet}_${card}.jpeg`, `images/Carte_${planet}_${card}.jpeg`];
+  function getImageSrc(planet, card) {
+  const srcJPG = [`images/carte_${planet}_${card}.jpg`, `images/Carte_${planet}_${card}.jpg`];
+  const srcJPEG = [`images/carte_${planet}_${card}.jpeg`, `images/Carte_${planet}_${card}.jpeg`];
+  const srcFinal = [`images/Carte_F_${card}.jpg`,`images/Carte_F_${card}.jpeg`];
 
-    for (const src of [...srcJPG,...srcJPEG])
-    {
-        let img = new Image();
-        img.src = src;
-        if (img.complete && img.naturalWidth !== 0) {
-          return src;
+  const loadImage = (src) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        if (img.naturalWidth !== 0) {
+          resolve(src);
+        } else {
+           resolve(''); // Resolve with an empty string if no image
         }
-    }
+      };
+      img.onerror = () => {
+        resolve('');
+      };
+      img.src = src;
+    });
+  };
 
-    return ''; // Return empty if no image found
+    if(planet === 'F')
+      return Promise.any(srcFinal.map(loadImage));
+    
+    return Promise.any([...srcJPG,...srcJPEG].map(loadImage))
 }
 
     // Show card function
-    function showCard() {
+   async function showCard() {
         const inputNumber = parseInt(document.getElementById('cardInput').value);
        
        
-        if (inputNumber < 1 || inputNumber > 11) {
-            alert('Veuillez entrer un numéro entre 1 et 11');
+        if (inputNumber < 1 ) {
+           document.getElementById('rectoImage').src = '';
+           document.getElementById('versoImage').src = '';
             return;
         }
 
       
         const planetSelector = document.getElementById('planetSelector');
-        currentPlanet = parseInt(planetSelector.value);
+        currentPlanet = planetSelector.value;
 
 
         const {recto, verso} = calculateCardNumbers(inputNumber);
         
-        document.getElementById('rectoImage').src = getImageSrc(currentPlanet,recto);
-        document.getElementById('versoImage').src = getImageSrc(currentPlanet,verso);
+        const rectoSrc = await getImageSrc(currentPlanet,recto)
+        const versoSrc = await getImageSrc(currentPlanet,verso)
+
+        if (rectoSrc == '' || versoSrc == '')
+        {
+           document.getElementById('rectoImage').src = '';
+           document.getElementById('versoImage').src = '';
+            return;
+        }
+
+        document.getElementById('rectoImage').src = rectoSrc;
+        document.getElementById('versoImage').src = versoSrc;
         
         isFrontVisible = true;
         document.getElementById('rectoImage').style.opacity = 1;
